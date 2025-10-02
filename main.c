@@ -74,27 +74,10 @@ int next_led=2;
 int last_direction;
 int time=5;
 
-
-void blink_task(ledc_channel_t channel){
-    
-    if (brightness[current_led]<=4){
-        set_brightness(channel,20);
-        vTaskDelay(pdMS_TO_TICKS(300));
-    }
-    
-    set_brightness(channel,0);
-    vTaskDelay(pdMS_TO_TICKS(300));
-    set_brightness(channel,brightness[current_led]); 
-    
-    
-}
-
 void update_leds_indices(int direction){
     current_led = (current_led + direction + 3) % 3;
     previous_led = (current_led + 2) % 3;
-    next_led     = (current_led + 1) % 3;
-    
-    
+    next_led     = (current_led + 1) % 3;  
 }
 
 
@@ -119,7 +102,7 @@ void app_main(void) {
 
         //left direction
         if (x<100 && y>2300 && y<3500 ){  
-
+            //if direction is changed midway -> change leds indices
             if(last_direction==1)update_leds_indices(1);
 
             printf("Zaczynam ruch w lewo, prev_led: %d\n",previous_led);
@@ -141,6 +124,7 @@ void app_main(void) {
 
 
         }
+        //right direction
         if (x>4000 && y>2300 && y<3500){
 
             if(last_direction==0)update_leds_indices(-1);
@@ -189,4 +173,5 @@ void app_main(void) {
         vTaskDelay(pdMS_TO_TICKS(100)); 
 
     }
+
 }
